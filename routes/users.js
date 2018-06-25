@@ -4,7 +4,7 @@ var User = require('../models/user');
 
 router.get('/:id?', function(req, res, next) {  
 if (req.params.id) {  
-        User.getUserById(req.params.id, function(err, rows) {  
+  User.getuserById(req.params.id, function(err, rows) {  
 if (err) {  
                 res.json(err);  
             } else {  
@@ -12,7 +12,7 @@ if (err) {
             }  
         });  
     } else {  
-        User.getAllUsers(function(err, rows) {  
+      User.getAllusers(function(err, rows) {  
 if (err) {  
                 res.json(err);  
             } else {  
@@ -22,7 +22,7 @@ if (err) {
     }  
 });  
 router.post('/', function(req, res, next) {  
-    User.addUser(req.body, function(err, count) {  
+  User.adduser(req.body, function(err, count) {  
 if (err) {  
             res.json(err);  
         } else {  
@@ -31,7 +31,7 @@ if (err) {
     });  
 });  
 router.delete('/:id', function(req, res, next) {  
-    User.deleteUser(req.params.id, function(err, count) {  
+  User.deleteuser(req.params.id, function(err, count) {  
 if (err) {  
             res.json(err);  
         } else {  
@@ -40,7 +40,7 @@ if (err) {
     });  
 });  
 router.put('/:id', function(req, res, next) {  
-    User.updateUser(req.params.id, req.body, function(err, rows) {  
+  User.updateuser(req.params.id, req.body, function(err, rows) {  
 if (err) {  
             res.json(err);  
         } else {  
