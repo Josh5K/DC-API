@@ -6,7 +6,10 @@ return db.query("select * from users", callback);
     },  
     getuserById: function(id, callback) {  
 return db.query("select * from users where Id=?", [id], callback);
-    },  
+    },
+    getuserByName: function(username, callback) {  
+return db.query("select * from users where username=?", [username], callback);
+    }, 
     adduser: function(user, callback) {  
 return db.query("Insert into users values(?,?,?)", [user.id, user.username, user.avatar], callback);  
     },  
