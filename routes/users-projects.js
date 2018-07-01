@@ -2,7 +2,7 @@ var express = require('express');
 var router = express.Router();  
 var UserProject = require('../models/user-project');
 
-router.get('/:id?', function(req, res, next) {  
+router.get('/id/:id?', function(req, res, next) {  
 if (req.params.id) {  
     UserProject.getuserprojectById(req.params.id, function(err, rows) {  
 if (err) {  
@@ -20,7 +20,16 @@ if (err) {
             }  
         });  
     }  
-});  
+});
+router.get('/user/:userid', function(req, res, next) {  
+        UserProject.getuserprojectByUserID(req.params.userid, function(err, rows) {  
+    if (err) {  
+                    res.json(err);  
+                } else {  
+                    res.json(rows);  
+                }  
+            });   
+    });   
 router.post('/', function(req, res, next) {  
     UserProject.adduserproject(req.body, function(err, count) {  
 if (err) {  
