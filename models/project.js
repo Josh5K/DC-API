@@ -8,7 +8,7 @@ return db.query("select * from projects", callback);
 return db.query("select * from projects where Id=?", [id], callback);
     },  
     addproject: function(project, callback) {  
-return db.query("Insert into projects values(?,?,?,?,?,?)", [project.id, project.name, project.description, project.repository, project.startdate, project.enddate], callback);  
+return db.query("Insert into projects (name) values(?)", [project.name], callback);  
     },  
     deleteproject: function(id, callback) {  
 return db.query("delete from projects where Id=?", [id], callback);  
