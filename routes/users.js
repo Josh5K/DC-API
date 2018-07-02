@@ -56,6 +56,24 @@ router.get('/projects/', function(req, res, next) {
         });
     }
 });
+router.get('/id/:id', function(req, res, next) {   
+    User.getuserById(req.params.id, function(err, rows) {  
+  if (err) {  
+                  res.json(err);  
+              } else {  
+                  res.json(rows);  
+              }  
+          });  
+  });
+router.get('/name/:username', function(req, res, next) {   
+    User.getuserByName(req.params.username, function(err, rows) {  
+  if (err) {  
+                  res.json(err);  
+              } else {  
+                  res.json(rows);  
+              }  
+          });
+  });
 //End GET  
 
 //Start POST
