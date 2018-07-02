@@ -8,7 +8,6 @@ var logger = require('morgan');
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var projectrouter=require('./routes/projects');
-var userprojectrouter=require('./routes/users-projects');
 
 var cors=require('cors');
 var app = express();
@@ -21,7 +20,6 @@ app.use(bodyParser.urlencoded({
 app.use(cors());
 app.use('/users',usersRouter);
 app.use('/projects',projectrouter);
-app.use('/users-projects',userprojectrouter);
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
