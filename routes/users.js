@@ -1,11 +1,12 @@
 var express = require('express');  
-var router = express.Router();  
+var router = express.Router();
+var helpers = require('../helpers/js/commonhelpers');  
 var User = require('../models/user');
 
 //Start GET
 router.get('/', function(req, res, next) {  
     if (req.headers['id'] != null) {  
-        User.getuserById(req.headers['id'], function(err, rows) {  
+        User.getUserById(req.headers['id'], function(err, rows) {  
             if (err) {  
                 res.json(err);  
             } else {  
@@ -14,18 +15,37 @@ router.get('/', function(req, res, next) {
         });  
     }
     else if(req.headers['name'] != null) {
-        User.getuserByName(req.headers['name'], function(err, rows) {
+        User.getUserByName(req.headers['name'], function(err, rows) {
             if(err) {
                 res.json(err);
             } else {
                 res.json(rows);
             }
         })
+    }
+    else if(req.headers['query'] != null) {
+        User.getUserSearchResults(req.headers['query'], function(err, rows) {
+            if(err) {
+                res.json(err);
+            }
+            else {
+                res.json(rows);
+            }
+        })
+    }
+    else if(req.headers['role'] != null) {
+        User.getUserByRole(req.headers['role'], function(err, rows) {
+            if(err) {
+                res.json(err);
+            }
+            else {
+                res.json(rows);
+            }
+        });
     } 
     else {  
-        User.getAllusers(function(err, rows) {  
+        User.getAllUsers(function(err, rows) {  
             if (err) {
-                console.log();  
                 res.json(err);  
             } else {  
                 res.json(rows);  
@@ -46,7 +66,7 @@ router.get('/projects/', function(req, res, next) {
         })
     }
     else {   
-        User.getuserprojects(req.headers['id'], function(err, rows) {  
+        User.getUserProjects(req.headers['id'], function(err, rows) {  
             if (err) {  
                 res.json(err);  
             } 
@@ -56,33 +76,52 @@ router.get('/projects/', function(req, res, next) {
         });
     }
 });
-router.get('/id/:id', function(req, res, next) {   
-    User.getuserById(req.params.id, function(err, rows) {  
-  if (err) {  
-                  res.json(err);  
-              } else {  
-                  res.json(rows);  
-              }  
-          });  
-  });
-router.get('/name/:username', function(req, res, next) {   
-    User.getuserByName(req.params.username, function(err, rows) {  
-  if (err) {  
-                  res.json(err);  
-              } else {  
-                  res.json(rows);  
-              }  
-          });
-  });
+
+router.get('/login/', function(req, res, next) {
+    if(req.headers['username'] != null && req.headers['password'] != null) {
+        User.getUserLoginValidation(req.headers['username'], function(err, hash) {
+            if(err) {
+                return res.json(err);
+            }
+            else {
+                bcrypt.compare(req.headers['password'], hash, function(err, login) {
+                    if(err) {
+                        return "There was an error logging the user in."
+                    }
+                    else {
+                        helpers.generateSessionID(function (err, sessionID) {
+                            if(err) {
+                                return "There was an error logging the user in."
+                            }
+                            else if(login) {
+                                user.updateSessionID(req.headers['username'], sessionID, function(err, response) {
+                                    if(err) {
+                                        return "There was an error logging the user in.";
+                                    }
+                                    else {
+                                        return res.json(sessionID);
+                                    }
+                                });
+                            }      
+                            else {
+                                return res.json(null);
+                            }
+                        });
+                    }
+                });
+            }
+        });
+    }
+});
 //End GET  
 
 //Start POST
 router.post('/', function(req, res, next) {  
-  User.adduser(req.body, function(err, count) {  
+  User.addUser(req.body, function(err, count) {  
 if (err) {  
             res.json(err);  
         } else {  
-            res.json(req.body); //or return count for 1 & 0  
+            res.json(count);
         }  
     });  
 });
@@ -90,7 +129,7 @@ if (err) {
 
 //Start DELETE
 router.delete('/:id', function(req, res, next) {  
-    User.deleteuser(req.params.id, function(err, count) {  
+    User.deleteUser(req.params.id, function(err, count) {  
         if (err) {  
             res.json(err);  
         } 
@@ -105,7 +144,7 @@ router.delete('/:id', function(req, res, next) {
 router.put('/:id', function(req, res, next) {
     if(req.body.avatar != null)
     {  
-        User.updateavatar(req.params.id, req.body, function(err, rows) {  
+        User.updateAvatar(req.params.id, req.body, function(err, rows) {  
             if (err) {  
                 res.json(err);  
             } 
@@ -115,7 +154,7 @@ router.put('/:id', function(req, res, next) {
         });
     }
     else if(req.body.password != null) {
-        User.updatepassword(req.params.id, req.body, function(err, rows) {  
+        User.updatePassword(req.params.id, req.body, function(err, rows) {  
             if (err) {  
                 res.json(err);  
             } 
