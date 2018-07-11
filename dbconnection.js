@@ -1,7 +1,6 @@
 var mysql = require('mysql');  
 var connection = mysql.createPool({  
-    host: '192.168.64.2',
-    //port: '8080',  
+    host: 'localhost', 
     user: 'root',  
     password: '',  
     database: 'DevelopersClub'  
