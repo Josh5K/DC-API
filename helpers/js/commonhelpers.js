@@ -2,14 +2,14 @@ const crypto = require('crypto');
 
 function helpers () {}
 
-helpers.generateSessionID = function (callback) { 
+helpers.generateSessionID = function (callback) {
     crypto.randomBytes(256, function(err, buf) { 
         if (err) {
             callback(err);
             return; 
-        } 
+        }
         var sha = crypto.createHash('sha256'); 
-        sha.update(buf); 
+        sha.update(buf);
         callback(null, sha.digest('hex')); 
     }); 
 }

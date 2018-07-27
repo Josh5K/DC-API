@@ -34,12 +34,12 @@ var user = {
     },
     //Inserts
     addUser: function(user, callback) {  
-        bcrypt.hash(user.password, saltrounds = 10, function (err, res) {
+        bcrypt.hash(user.password, saltrounds = 10, function (err, hash) {
             if(err) {
                 return "There was an error creating the user.";
             }
             else {
-                return db.query("Insert into users (username, email, password) values(?,?)", [user.username, user.email, res], callback);
+                return db.query("Insert into users (username, email, password) values(?,?,?)", [user.username, user.email, hash], callback);
             }
         });  
     },  
@@ -57,8 +57,8 @@ var user = {
             }
         });
     },
-    updateSessionID: function(username, sessionid, callback) {
-        return db.query("UPDATE users SET sessionid=? WHERE username=?", [sessionid, username], callback); 
+    updateSessionID: function(username, session, callback) {
+        return db.query("UPDATE users SET session=? WHERE username=?", [session, username], callback); 
     },
     //Deletes
     deleteUser: function(id, callback) {  

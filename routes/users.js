@@ -2,6 +2,8 @@ var express = require('express');
 var router = express.Router();
 var helpers = require('../helpers/js/commonhelpers');  
 var User = require('../models/user');
+var bcrypt = require('./../node_modules/bcrypt');
+var salt = bcrypt.genSaltSync();
 
 //Start GET
 router.get('/', function(req, res, next) {  
@@ -84,30 +86,28 @@ router.get('/login/', function(req, res, next) {
                 return res.json(err);
             }
             else {
-                bcrypt.compare(req.headers['password'], hash, function(err, login) {
+                bcrypt.compare(req.headers['password'], hash.toString(), function(err, login) {
                     if(err) {
-                        return "There was an error logging the user in."
+                        return res.json("There was an error logging the user in.");
                     }
-                    else {
+                    else if(login) {
                         helpers.generateSessionID(function (err, sessionID) {
                             if(err) {
-                                return "There was an error logging the user in."
+                                return res.json("There was an error logging the user in.");
                             }
-                            else if(login) {
-                                user.updateSessionID(req.headers['username'], sessionID, function(err, response) {
+                            else {
+                                User.updateSessionID(req.headers['username'], sessionID, function(err, response) {
                                     if(err) {
-                                        return "There was an error logging the user in.";
+                                        return res.json("There was an error logging the user in.");
                                     }
                                     else {
                                         return res.json(sessionID);
                                     }
                                 });
                             }      
-                            else {
-                                return res.json(null);
-                            }
                         });
                     }
+                    console.log(login);
                 });
             }
         });
