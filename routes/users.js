@@ -86,8 +86,6 @@ router.get('/login/', function(req, res, next) {
                 return res.json(err);
             }
             else {
-                console.log(req.headers['password']);
-                console.log(hash.toString());
                 bcrypt.compare(req.headers['password'], hash[0].password, function(err, login) {
                     if(err) {
                         return res.json("There was an error logging the user in.");
@@ -112,7 +110,6 @@ router.get('/login/', function(req, res, next) {
                     else {
                         return res.json(0);
                     }
-                    console.log(login);
                 });
             }
         });
@@ -133,40 +130,44 @@ if (err) {
 //End POST
 
 //Start DELETE
-router.delete('/:id', function(req, res, next) {  
-    User.deleteUser(req.params.id, function(err, count) {  
-        if (err) {  
-            res.json(err);  
-        } 
-        else {  
-            res.json(count);  
-        }  
-    });  
+router.delete('/', function(req, res, next) {  
+    if(req.headers['id'] != null) {
+        User.deleteUser(req.headers['id'], function(err, count) {  
+            if (err) {  
+                res.json(err);  
+            } 
+            else {  
+                res.json(count);  
+            }  
+        });
+    }
 });
 //End DELETE
 
 //Start PUT
 router.put('/:id', function(req, res, next) {
-    if(req.body.avatar != null)
-    {  
-        User.updateAvatar(req.params.id, req.body, function(err, rows) {  
-            if (err) {  
-                res.json(err);  
-            } 
-            else { 
-                res.json(rows);  
-            }  
-        });
-    }
-    else if(req.body.password != null) {
-        User.updatePassword(req.params.id, req.body, function(err, rows) {  
-            if (err) {  
-                res.json(err);  
-            } 
-            else {  
-                res.json(rows);  
-            }  
-        });
+    if(req.headers['id'] != null) {
+        if(req.body.avatar != null)
+        {  
+            User.updateAvatar(req.params.id, req.body, function(err, rows) {  
+                if (err) {  
+                    res.json(err);  
+                } 
+                else { 
+                    res.json(rows);  
+                }  
+            });
+        }
+        else if(req.body.password != null) {
+            User.updatePassword(req.params.id, req.body, function(err, rows) {  
+                if (err) {  
+                    res.json(err);  
+                } 
+                else {  
+                    res.json(rows);  
+                }  
+            });
+        }
     }    
 });
 //End PUT
