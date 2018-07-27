@@ -3,7 +3,7 @@ var router = express.Router();
 var helpers = require('../helpers/js/commonhelpers');  
 var User = require('../models/user');
 var bcrypt = require('./../node_modules/bcrypt');
-var salt = bcrypt.genSaltSync();
+
 
 //Start GET
 router.get('/', function(req, res, next) {  
@@ -86,7 +86,9 @@ router.get('/login/', function(req, res, next) {
                 return res.json(err);
             }
             else {
-                bcrypt.compare(req.headers['password'], hash.toString(), function(err, login) {
+                console.log(req.headers['password']);
+                console.log(hash.toString());
+                bcrypt.compare(req.headers['password'], hash[0].password, function(err, login) {
                     if(err) {
                         return res.json("There was an error logging the user in.");
                     }
@@ -106,6 +108,9 @@ router.get('/login/', function(req, res, next) {
                                 });
                             }      
                         });
+                    }
+                    else {
+                        return res.json(0);
                     }
                     console.log(login);
                 });

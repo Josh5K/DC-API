@@ -34,9 +34,9 @@ var user = {
     },
     //Inserts
     addUser: function(user, callback) {  
-        bcrypt.hash(user.password, saltrounds = 10, function (err, hash) {
+        bcrypt.hash(user.password, bcrypt.genSaltSync(10), function (err, hash) {
             if(err) {
-                return "There was an error creating the user.";
+                return err;
             }
             else {
                 return db.query("Insert into users (username, email, password) values(?,?,?)", [user.username, user.email, hash], callback);
@@ -48,7 +48,7 @@ var user = {
         return db.query("UPDATE users SET avatar=? WHERE id=?", [user.avatar, id], callback);  
     },
     updatePassword: function(id, user, callback) {
-        bcrypt.hash(user.password, saltrounds = 10, function (err, res) {
+        bcrypt.hash(user.password, bcrypt.genSaltSync(10), function (err, res) {
             if(err) {
                 return "There was an error updating the user password.";
             }
