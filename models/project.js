@@ -9,24 +9,12 @@ var project = {
     },  
     getprojectByName: function(name, callback) {  
         return db.query("select * from projects where name=?", [name], callback);
-    },  
-    getprojectByDescription: function(description, callback) {  
-        return db.query("select * from projects where description=?", [description], callback);
-    },  
-    getprojectByRepository: function(repository, callback) {  
-        return db.query("select * from projects where repository=?", [repository], callback);
-    },  
-    getprojectByStartDate: function(startdate, callback) {  
-        return db.query("select * from projects where startdate=?", [startdate], callback);
-    },  
-    getprojectByEndDate: function(enddate, callback) {  
-        return db.query("select * from projects where enddate=?", [enddate], callback);
-    },  
-    getprojectByLastActive: function(lastactive, callback) {  
-        return db.query("select * from projects where lastactive=?", [lastactive], callback);
-    },  
+    },
     getuserByProject: function(id, callback) {
         return db.query("select username from userprojects LEFT OUTER JOIN projects ON usersprojects.projectid = project.id LEFT OUTER JOIN users ON user.id = usersprojects.userid WHERE usersprojects.projectid = ?", [id], callback);
+    },
+    getMostPopularProject: function(callback) {
+        return db.query("SELECT * FROM projects ORDER BY points");
     },
     addproject: function(project, callback) {  
         return db.query("Insert into projects (name) values(?)", [project.name], callback);  

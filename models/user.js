@@ -9,10 +9,10 @@ var user = {
         return db.query("SELECT users.id, users.username, users.avatar, users.datejoined, users.email, users.points FROM users;", callback);  
     },  
     getUserById: function(id, callback) {  
-        return db.query("SELECT users.id, users.username, users.avatar, users.datejoined, users.email, users.points, specialty.name FROM users LEFT OUTER JOIN specialties ON users.id = specialties.userid LEFT OUTER JOIN specialty ON specialty.id = specialties.specialtyid WHERE users.id =?", [id], callback);
+        return db.query("SELECT users.id, users.username, users.avatar, users.datejoined, users.email, users.points FROM users WHERE users.id =?", [id], callback);
     },
     getUserByName: function(username, callback) {  
-        return db.query("SELECT users.id, users.username, users.avatar, users.datejoined, users.email, users.points, specialty.name FROM users LEFT OUTER JOIN specialties ON users.id = specialties.userid LEFT OUTER JOIN specialty ON specialty.id = specialties.specialtyid WHERE users.username =?", [username], callback);
+        return db.query("SELECT users.id, users.username, users.avatar, users.datejoined, users.email, users.points FROM users WHERE users.username =?", [username], callback);
     },
     getUserProjects: function(userid, callback) {  
         return db.query("SELECT usersprojects.userid, usersprojects.projectid, projects.name, projects.description, usersprojects.datejoined, users.username, usersprojects.role, projects.startdate, projects.enddate FROM usersprojects LEFT OUTER JOIN users ON usersprojects.userid = users.id LEFT OUTER JOIN projects ON projects.id = usersprojects.projectid WHERE usersprojects.userid = ?", [userid], callback);
@@ -50,7 +50,7 @@ var user = {
     updatePassword: function(id, user, callback) {
         bcrypt.hash(user.password, bcrypt.genSaltSync(10), function (err, res) {
             if(err) {
-                return "There was an error updating the user password.";
+                return "There was an error updating the users password.";
             }
             else {
                 return db.query("UPDATE users SET password=? WHERE Id=?", [res, id], callback); 
@@ -65,4 +65,4 @@ var user = {
         return db.query("delete from users where Id=?", [id], callback);  
     }, 
 };  
-module.exports = user; 
+module.exports = user;
